@@ -1,5 +1,4 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ page import="java.util.ArrayList"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +10,7 @@
 		<div align="center">
 			<h1>Hi ! ${user.email} </h1><br/>
 			<p><a href="${logout}">Logout</a><br/></p>
+			<p><a href="/create">CREATE A NEW APPOINTMENT !</a></p><br />
 	    </div>
 		</c:when>
 		<c:otherwise>
