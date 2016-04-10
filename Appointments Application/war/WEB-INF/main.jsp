@@ -11,6 +11,14 @@
 			<h1>Hi ! ${user.email} </h1><br/>
 			<p><a href="${logout}">Logout</a><br/></p>
 			<p><a href="/create">CREATE A NEW APPOINTMENT !</a></p><br />
+			<script>
+				if (document.getElementById("app")) {
+					document.getElementById("app").parentNode
+							.removeChild(document.getElementById("app"));
+				}
+			</script>
+			<%out.write(request.getAttribute("fetch").toString());%>
+			
 	    </div>
 		</c:when>
 		<c:otherwise>
