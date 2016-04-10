@@ -18,7 +18,17 @@
 			<br/><br/>	
 		</c:when>
 		<c:otherwise>
-			<h2 align="center">Page 05</h2>
+			<div align="center" action="/">
+				<form method="post">
+					<br /> <br />
+					<h2>Create Appointment</h2>
+					<br /> <input type="text" name="name" /><br /><br /> 
+					<input type="text" name="date" /><br /><br />
+					<input type="text" name="time" /><br /><br /> 
+					<input name="add" type="submit" /><br /><br />
+				</form>
+				<a href="/">cancle</a><br /><br />
+			</div>
 		</c:otherwise>
 
 	</c:choose>
