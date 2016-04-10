@@ -1,6 +1,7 @@
 package com.sudheer.assignment2;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.jdo.PersistenceManager;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,12 +13,31 @@ import com.google.appengine.api.users.UserServiceFactory;
 
 @SuppressWarnings("serial")
 public class Appointments_ApplicationServlet extends HttpServlet {
-	
+	PrintWriter output;
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		resp.sendRedirect("/");
+		UserService service = UserServiceFactory.getUserService();
+		com.google.appengine.api.users.User usr = service.getCurrentUser();
+		if (usr==null)
+			return;
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Key key = KeyFactory.createKey("User", usr.getUserId());
+		output = resp.getWriter();
+		com.sudheer.assignment2.User user = pm.getObjectById(com.sudheer.assignment2.User.class, key);
+		for (int i = 0; i < user.getAppointments().size(); i++) {
+
+			if (req.getParameter((i +"dleteButton")) != null) {
+				pm.deletePersistent(user.getAppointments().get(i));
+				pm.close();
+				output.println("<script type=\"text/javascript\">");
+				output.println("alert('Deleted');");
+				output.println("location='/';");
+				output.println("</script>");
+				break;
+			}
+		}
 	}
-	
+
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		UserService us = UserServiceFactory.getUserService();
 		com.google.appengine.api.users.User u = us.getCurrentUser();
@@ -32,18 +52,21 @@ public class Appointments_ApplicationServlet extends HttpServlet {
 			if (u != null) {
 				ID = u.getUserId();
 				Key key = KeyFactory.createKey("User", ID);
-				PersistenceManager pm= PMF.get().getPersistenceManager();
+				PersistenceManager pm = PMF.get().getPersistenceManager();
 				com.sudheer.assignment2.User user = pm.getObjectById(com.sudheer.assignment2.User.class, key);
-				String data="";
-				if (user.getAppointments() != null && user.getAppointments().size()>0) {
-					data+="<div id= \"app\" align=\"center\"><form method=\"post\"><h2 align=\"center\" >YOUR APPOINTMENTS</h2><br/>";
+				String data = "";
+				if (user.getAppointments() != null && user.getAppointments().size() > 0) {
+					data += "<div id= \"app\" align=\"center\"><form method=\"post\"><h2 align=\"center\" >YOUR APPOINTMENTS</h2><br/>";
 					for (int i = 0; i < user.getAppointments().size(); i++) {
-						String temp="NAME: " + user.getAppointments().get(i).getName() + "  DATE : " + user.getAppointments().get(i).getDate() + "  TIME : " + user.getAppointments().get(i).getTime()+ "   <========>   ";
-						data+="<lable>" + temp + "</lable>";
-						data+="<input type=\"submit\" name=\""+(i+"editButton")+ "\" value=\"Edit\" \\>";
-						data+="<input type=\"submit\" name=\""+(i+"dleteButton")+ "\" value=\"Delete\" \\><br/><br/>";
+						String temp = "NAME: " + user.getAppointments().get(i).getName() + "  DATE : "
+								+ user.getAppointments().get(i).getDate() + "  TIME : "
+								+ user.getAppointments().get(i).getTime() + "   <========>   ";
+						data += "<lable>" + temp + "</lable>";
+						data += "<input type=\"submit\" name=\"" + (i + "editButton") + "\" value=\"Edit\" \\>";
+						data += "<input type=\"submit\" name=\"" + (i + "dleteButton")
+								+ "\" value=\"Delete\" \\><br/><br/>";
 					}
-					data+="</form></div>";
+					data += "</form></div>";
 				}
 				req.setAttribute("fetch", data);
 			}

@@ -15,10 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 
 @SuppressWarnings("serial")
 public class createAppointmentServlet extends HttpServlet {
-
+	PrintWriter output ;
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		PrintWriter out = resp.getWriter();
+		output = resp.getWriter();
 		UserService service = UserServiceFactory.getUserService();
 		com.google.appengine.api.users.User u = service.getCurrentUser();
 
@@ -26,10 +26,10 @@ public class createAppointmentServlet extends HttpServlet {
 		String date = req.getParameter("date").trim();
 		String time = req.getParameter("time").trim();
 		if (name.equals("") || date.equals("") || time.equals("")) {
-			out.println("<script type=\"text/javascript\">");
-			out.println("alert('Wrong Input');");
-			out.println("location='/create';");
-			out.println("</script>");
+			output.println("<script type=\"text/javascript\">");
+			output.println("alert('Wrong Input');");
+			output.println("location='/create';");
+			output.println("</script>");
 			return;
 		}
 		
@@ -45,10 +45,10 @@ public class createAppointmentServlet extends HttpServlet {
 			user.addAppointment(ap);
 			pm.makePersistent(ap);
 			pm.makePersistent(user);
-			out.println("<script type=\"text/javascript\">");
-			out.println("alert('Appointment Created Successfully');");
-			out.println("location='/';");
-			out.println("</script>");
+			output.println("<script type=\"text/javascript\">");
+			output.println("alert('Appointment Created Successfully');");
+			output.println("location='/';");
+			output.println("</script>");
 		} catch (Exception e) {
 			user = new com.sudheer.assignment2.User(user_key);
 			pm.makePersistent(user);
@@ -57,10 +57,10 @@ public class createAppointmentServlet extends HttpServlet {
 			user.addAppointment(ap);
 			pm.makePersistent(ap);
 			pm.makePersistent(user);
-			out.println("<script type=\"text/javascript\">");
-			out.println("alert('Appointment Added !');");
-			out.println("location='/';");
-			out.println("</script>");
+			output.println("<script type=\"text/javascript\">");
+			output.println("alert('Appointment Added !');");
+			output.println("location='/';");
+			output.println("</script>");
 		} finally {
 			pm.close();
 		}
