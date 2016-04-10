@@ -35,6 +35,11 @@ public class Appointments_ApplicationServlet extends HttpServlet {
 				output.println("</script>");
 				break;
 			}
+			else if(req.getParameter((i+"editButton"))!=null){
+				req.getSession().setAttribute("appointment",user.getAppointments().get(i).getID());
+				resp.sendRedirect("/update");
+				break;
+			}
 		}
 	}
 
@@ -56,7 +61,7 @@ public class Appointments_ApplicationServlet extends HttpServlet {
 				com.sudheer.assignment2.User user = pm.getObjectById(com.sudheer.assignment2.User.class, key);
 				String data = "";
 				if (user.getAppointments() != null && user.getAppointments().size() > 0) {
-					data += "<div id= \"app\" align=\"center\"><form method=\"post\"><h2 align=\"center\" >YOUR APPOINTMENTS</h2><br/>";
+					data += "<div id= \"container\" align=\"center\"><form method=\"post\"><h2 align=\"center\" >YOUR APPOINTMENTS</h2><br/>";
 					for (int i = 0; i < user.getAppointments().size(); i++) {
 						String temp = "NAME: " + user.getAppointments().get(i).getName() + "  DATE : "
 								+ user.getAppointments().get(i).getDate() + "  TIME : "
